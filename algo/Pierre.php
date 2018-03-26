@@ -12,9 +12,10 @@
       $this->coord_x = $x;
       $this->coord_y = $y;
     }
+    
     function draw($trans)
     {
-      echo '<circle cx="' .$this->coord_x. '" cy="' .$this->coord_y. '" r="5" stroke="black" stroke-width="0.5" fill="'.$this->color.'" fill-opacity="'$trans'"/>';
+      echo '<circle cx="'.$this->coord_x.'" cy="'.$this->coord_y.'" r="3" stroke="'.$this->color.'" stroke-width="0.5" fill="'.$this->color.'" fill-opacity="'.$trans.'"/>';
     }
   }
 ?>
