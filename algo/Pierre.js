@@ -55,17 +55,20 @@ function fitGrid(stone, stonePos, size)
     // Create the stone or update its position
     if((stonePos.x >= 0) && (stonePos.x <= (size * 10 - 10)) && (stonePos.y >= 0) && (stonePos.y <= (size * 10 - 10)))
     {
-    	if(document.getElementById("stone") == null)
-	    {
-	       	document.getElementById("goban").appendChild(stone);
-	       	document.getElementById("stone").onclick = placeStone;
-	    }
-	    else
-	    {
-	    	document.getElementById("stone").setAttribute("cx", stonePos.x);
-	    	document.getElementById("stone").setAttribute("cy", stonePos.y);
-	    }
-	    stonePosition = new coordinate(stonePos.x, stonePos.y);
+    	if(document.getElementById(getLabels(stonePos)) == null)
+    	{
+    		if(document.getElementById("stone") == null)
+		    {
+		       	document.getElementById("goban").appendChild(stone);
+		       	document.getElementById("stone").onclick = placeStone;
+		    }
+		    else
+		    {
+		    	document.getElementById("stone").setAttribute("cx", stonePos.x);
+		    	document.getElementById("stone").setAttribute("cy", stonePos.y);
+		    }
+		    stonePosition = new coordinate(stonePos.x, stonePos.y);
+    	}
     }
 }
     
@@ -77,6 +80,7 @@ function placeStone()
     var stone = document.createElementNS(svgNS,"circle");
 
     // Attributes of the stone
+    stone.setAttribute("id", getLabels(stonePosition));
     stone.setAttribute("r", 3);
     stone.setAttribute("stroke", "black");
     stone.setAttribute("stroke-width", 0.5);
@@ -86,4 +90,37 @@ function placeStone()
     stone.setAttribute("cy", stonePosition.y);
 
     document.getElementById("goban").appendChild(stone);
+}
+
+// Convert coordinates with the corresponding labels
+function getLabels(position)
+{
+	// Get the position on X axe
+	if (position.x > 0) var coordX = String.fromCharCode((position.x / 10) + 65);
+	else var coordX = String.fromCharCode(65);
+
+	// Get the position on Y axe
+	var coordY = (position.y + 10) / 10;
+
+	var coord = coordX + coordY;
+
+	return coord;
+}
+
+// Convert labels with the corresponding coordinates
+function getPosition(labels)
+{
+	// Get the coordinate on X axe
+	var coordX = labels.match(/[A-Z]+/g);
+	var posX = coordX.charCodeAt() - 65;
+	if (posX > 0) posX *= 10;
+	else posX = 0; 
+
+	// Get the coordinate on Y axe
+	var coordY = labels.match(/\d+/g);
+	var posY = (coordY * 10) - 10;
+
+	var position = new coordinate(posX, posY);
+
+	return position;
 }
