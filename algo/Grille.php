@@ -1,5 +1,4 @@
 <?php
-
 class Grille
 {
   private $d;
@@ -9,7 +8,6 @@ class Grille
   private $y_label;
   private $tab;
   private $size;
-
   function __construct($size, $x, $y)
   {
     $this->size = $size;
@@ -19,7 +17,6 @@ class Grille
     $this->initEdges($size);
     $this->initLabels($size, $x, $y);
   }
-
   function initEdges($size)
   {
     $s1 = "M ";
@@ -28,7 +25,6 @@ class Grille
     for ($i = 0; $i <= $size-1; $i++)
       $var .= $s1 . ($i * 10) . $s2;
     $this->d = '<path id="traits" stroke-width="0.3" d="'.$var.'" fill="url(#bg)" stroke="black"/>';
-
     switch ($size)
     {
       case 'value':
@@ -36,7 +32,7 @@ class Grille
         break;
       case 9:
         $this->dots .= '<circle cx="40" cy="40" r="1" fill="black" />';
-        break; 
+        break;
       case 13:
         $this->dots .= '<circle cx="30" cy="30" r="1" fill="black" />';
         $this->dots .= '<circle cx="60" cy="30" r="1" fill="black" />';
@@ -47,7 +43,7 @@ class Grille
         $this->dots .= '<circle cx="30" cy="90" r="1" fill="black" />';
         $this->dots .= '<circle cx="60" cy="90" r="1" fill="black" />';
         $this->dots .= '<circle cx="90" cy="90" r="1" fill="black" />';
-        break; 
+        break;
       case 19:
         $this->dots .= '<circle cx="30" cy="30" r="1" fill="black" />';
         $this->dots .= '<circle cx="90" cy="30" r="1" fill="black" />';
@@ -66,7 +62,6 @@ class Grille
   function initLabels($size)
   {
     $char = 'A';
-
     for ($i = -1; $i <= $size-2; $i++)
     {
       $var = ($i * 10);
@@ -100,5 +95,4 @@ class Grille
     echo $this->dots;
   }
 }
-
 ?>
