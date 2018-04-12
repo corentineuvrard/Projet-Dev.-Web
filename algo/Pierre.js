@@ -103,7 +103,7 @@ function fitGrid(stone, stonePos, size)
         // Add or remove the event listener of the tracker according to its position relative to other stones
         if (!isCaptured(idTracker))
           document.getElementsByClassName("tracker")[0].addEventListener("click", placeStone);
-        else
+        else if (!checkSides(idTracker))
           document.getElementsByClassName("tracker")[0].removeEventListener("click", placeStone);
 
         marque = [];
@@ -123,6 +123,7 @@ function placeStone()
 
   // Attributes of the stone
   stone.setAttribute("id", id);
+  stone.setAttribute("class", "stone");
   stone.setAttribute("r", 3);
   stone.setAttribute("stroke", getColor());
   stone.setAttribute("stroke-width", 0.5);
@@ -231,6 +232,9 @@ function checkSides(id)
 {
   var color = document.getElementById(id).getAttribute("fill");
   var neighbours = getNeighbours(id);
+  var stones = document.getElementsByClassName("stone");
+  var tracker = true;
+  var capture = false;
 
   for (var i = 0; i < neighbours.length; i++)
   {
@@ -239,11 +243,25 @@ function checkSides(id)
       if (neighbours[i].getAttribute("fill") != color)
         // Check if the neighbour has been captured by the stone put on the goban
         if (isCaptured(neighbours[i].getAttribute("id")))
+        {
+          for (var j = 0; j < stones.length; j++)
+          {
+            // Check if a stone has been put on the position of the tracker
+            if (stones[j].getAttribute("id") == document.getElementsByClassName("tracker")[0].getAttribute("id"))
+              tracker = false;
+          }
+          capture = true;
           // Remove the captured stones from the goban
-          for (var j = 0; j < marque.length; j++)
-            document.getElementById("goban").removeChild(document.getElementById(marque[j]));
+          if (!tracker)
+          {
+            for (var k = 0; k < marque.length; k++)
+              document.getElementById("goban").removeChild(document.getElementById(marque[k]));
+          }
+        }
     marque = [];
   }
+
+  return capture;
 }
 
 // Return if a stone is captured
