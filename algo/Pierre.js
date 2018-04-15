@@ -1,6 +1,14 @@
 var stonePosition;
 var nbCoups;
 var marque = [];
+var previousKo = [];
+
+// Initialize the mouse event on the svg
+function init()
+{
+  var size = (getGobanSize()[2] + 10) / 10;
+  document.getElementsByTagName("svg")[0].addEventListener("mousemove", function(e) { trackingStone(e, size); });
+}
 
 // Object coordinates
 function coordinate(x, y)
@@ -105,6 +113,8 @@ function fitGrid(stone, stonePos, size)
           document.getElementsByClassName("tracker")[0].addEventListener("click", placeStone);
         else if (!checkSides(idTracker))
           document.getElementsByClassName("tracker")[0].removeEventListener("click", placeStone);
+        else
+          document.getElementsByClassName("tracker")[0].addEventListener("click", placeStone);
 
         marque = [];
 	    }
@@ -211,6 +221,34 @@ function isInGoban(x, y)
     return true;
   }
 
+// Check if there is a ko
+  function ko(newStone)
+  {
+    var ko = false;
+    var trackerMarque = false;
+
+    if (marque.length == 2)
+      if (marque[0] == newStone)
+        trackerMarque = true;
+
+    if ((marque.length == 1) || trackerMarque)
+    {
+      if (previousKo.length > 0)
+        if (trackerMarque)
+        {
+          if (newStone == previousKo[1] && marque[1] == previousKo[0] && previousKo[2] == (nbCoups - 1))
+            ko = true;
+        }
+        else
+        {
+          if (newStone == previousKo[1] && marque[0] == previousKo[0] && previousKo[2] == (nbCoups - 1))
+            ko = true;
+        }
+    }
+
+    return ko;
+  }
+
 // Get the neeighbours of a stone
 function getNeighbours(id)
 {
@@ -250,14 +288,30 @@ function checkSides(id)
             if (stones[j].getAttribute("id") == document.getElementsByClassName("tracker")[0].getAttribute("id"))
               tracker = false;
           }
-          capture = true;
+          // Check if there is a ko
+          if (!ko(id))
+            capture = true;
           // Remove the captured stones from the goban
           if (!tracker)
           {
+            // Update the last ko
+            if (marque.length == 1)
+            {
+              previousKo[0] = id;
+              previousKo[1] = marque[0];
+              previousKo[2] = nbCoups;
+            }
+            else
+            {
+              previousKo[0] = "";
+              previousKo[1] = "";
+            }
+            
             for (var k = 0; k < marque.length; k++)
               document.getElementById("goban").removeChild(document.getElementById(marque[k]));
           }
         }
+    neighbours = getNeighbours(id);
     marque = [];
   }
 
