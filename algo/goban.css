@@ -13,3 +13,10 @@ svg
 	-webkit-user-select: none;
 	-moz-user-select: none;
 }
+
+#skip_button
+{
+	user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+}
